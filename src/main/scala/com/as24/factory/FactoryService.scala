@@ -40,7 +40,7 @@ class FactoryService (
   case class UniqueOrder(id: Int, items: Seq[Item])
 
   /**
-    * Very interesting function which becomes a stream of pairs (one order -> all possible items) and select those items
+    * Very interesting function which becomes a stream of pairs (one order -> all possible items), selects those items
     * which were ordered and then puts them to a box.
     */
   private val boxOrder: PartialFunction[(UniqueOrder, Observable[(UniqueOrder, Item)]), Observable[PresentBox]] = {
