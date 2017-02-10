@@ -14,8 +14,7 @@ class FactoryService (
 ) extends Factory {
 
   def run(): Unit = {
-    val itemsStream = from(itemSource).cache // cache since we want to use the items multiple times but we do not want
-    // to consume itemSource multiple times
+    val itemsStream = from(itemSource).cache // cache since we want to use the items multiple times but we do not want to consume itemSource multiple times
 
     val ordersStream = from(ordersSource)
 
