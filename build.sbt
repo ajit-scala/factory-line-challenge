@@ -13,7 +13,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 //)
 
 // Uncomment to use RX
-//libraryDependencies ++= Seq(
-//  "io.reactivex" %% "rxscala" % "0.26.5",
-//  "io.reactivex" % "rxjava" % "1.2.6"
-//)
+libraryDependencies ++= Seq(
+  "io.reactivex" %% "rxscala" % "0.26.5",
+  "io.reactivex" % "rxjava" % "1.2.6"
+)
