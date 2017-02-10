@@ -19,10 +19,10 @@ class FactoryService (
     val ordersStream = from(ordersSource)
 
     ordersStream
-      .zipWithIndex // since there is no order id we need some identifier to group items otherwise two orders with the same items will be grouped together
-      .map { case (Order(items), id) => UniqueOrder(id, items)}
+      .zipWithIndex // since there is no order id we need some identifier to group items otherwise two orders with the same items will be considered equal
+      .map { case (Order(items), id) => UniqueOrder(id, items)} // just map to a helper case class to simplify order id handling
       .flatMap(o => itemsStream.map((o, _))) // do cartesian product between orders and items
-      .groupBy { case (order, _) => order } // group order-item pairs by order id (index)
+      .groupBy { case (order, _) => order } // group order-item pairs by order
       .flatMap(boxOrder) // prepare boxes by filtering those order-item pairs
       .groupBy(qcService.isOk) // the rest is obvious
       .flatMap {
@@ -39,6 +39,10 @@ class FactoryService (
     */
   case class UniqueOrder(id: Int, items: Seq[Item])
 
+  /**
+    * Very interesting function which becomes a stream of pairs (one order -> all possible items) and select those items
+    * which were ordered and then puts them to a box.
+    */
   private val boxOrder: PartialFunction[(UniqueOrder, Observable[(UniqueOrder, Item)]), Observable[PresentBox]] = {
     case (order, pairs) =>
       pairs.observeOn(ComputationScheduler()) // let's box orders in parallel to make it more interesting :)
